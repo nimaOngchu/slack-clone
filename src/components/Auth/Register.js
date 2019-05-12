@@ -10,18 +10,41 @@ import {
   Icon
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
+import firebase from "../../firebase";
 export class Register extends Component {
-  state = {};
-  handleChange = () => {};
+  state = {
+    username: "",
+    email: "",
+    password: "",
+    passwordConfirmation: ""
+  };
+  handleChange = event => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  };
+  handleSubmit = event => {
+    event.preventDefault();
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(this.state.email, this.state.password)
+      .then(createdUSer => {
+        console.log(createdUSer);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
   render() {
+    const { username, email, password, passwordConfirmation } = this.state;
     return (
-      <Grid textAlign="center" verticalAlign="middle">
+      <Grid textAlign="center" verticalAlign="middle" className="app">
         <Grid.Column style={{ maxWidth: 450 }}>
           <Header as="h2" icon color="orange" textAlign="center">
             <Icon name="puzzle piece" color="orange" />
             Register for DevChat
           </Header>
-          <Form size="large">
+                <Form onSubmit={this.handleSubmit} size="large">
             <Segment stacked>
               <Form.Input
                 fluid
@@ -31,6 +54,7 @@ export class Register extends Component {
                 placeholder="Username"
                 onChange={this.handleChange}
                 type="text"
+                value={username}
               />
               <Form.Input
                 fluid
@@ -40,24 +64,28 @@ export class Register extends Component {
                 placeholder="Email Address"
                 onChange={this.handleChange}
                 type="email"
+                value={email}
               />
-              <Form.Input
+
+        <Form.Input
                 fluid
                 name="password"
-                icon="lock"
-                iconPosition="left"
-                placeholder="Passowrd"
-                onChange={this.handleChange}
-                type="password"
-              />
-              <Form.Input
-                fluid
-                name="passwordConfimation"
                 icon="lock"
                 iconPosition="left"
                 placeholder="Confirm Passowrd"
                 onChange={this.handleChange}
                 type="password"
+                value={password}
+              />
+             <Form.Input
+                fluid
+                name="passwordConfirmation"
+                icon="lock"
+                iconPosition="left"
+                placeholder="Passowrd Confirmation"
+                onChange={this.handleChange}
+                type="password"
+                value={passwordConfirmation}
               />
               <Button color="orange" fluid size="large">
                 Submit

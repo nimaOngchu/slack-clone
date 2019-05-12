@@ -1,4 +1,8 @@
-import firebase from 'firebase/app'
+/* eslint-disable jsx-a11y/href-no-hash */
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/database';
+import 'firebase/storage';
 var firebaseConfig = {
     apiKey: "AIzaSyAPMRdtvVrdMWgY-6lXXEMjC6AgDEroNK0",
     authDomain: "awsomechat-8828f.firebaseapp.com",
@@ -9,4 +13,5 @@ var firebaseConfig = {
     appId: "1:146340850676:web:5c77bdca14819407"
   };
   // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
+export default firebase;
