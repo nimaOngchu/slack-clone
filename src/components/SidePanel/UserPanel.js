@@ -36,8 +36,8 @@ class UserPanel extends Component {
       });
   };
   render() {
-    const currentUser = this.props.currentUser;
-    console.log(currentUser);
+    const user = this.props.currentUser;
+
     return (
       <Grid style={{ background: "#4c3c4c" }}>
         <Grid.Column>
@@ -53,8 +53,8 @@ class UserPanel extends Component {
             <Dropdown
               trigger={
                 <span>
-                  <Image src={this.state.user.photoURL} spaced="right" avatar />
-                  {this.state.user.displayName}
+                  <Image src={user.photoURL} spaced="right" avatar />
+                  {user.displayName}
                 </span>
               }
               options={this.dropdownOptions()}
