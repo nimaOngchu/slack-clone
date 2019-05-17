@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Segment, Button, Input } from "semantic-ui-react";
 import firebase from "../../firebase";
+import FileModal from './FileModal'
 
 export class MessageForm extends Component {
   state = {
@@ -8,7 +9,8 @@ export class MessageForm extends Component {
     loading: false,
     channel: this.props.currentChannel,
     user: this.props.currentUser,
-    errors: []
+    errors: [],
+    modal:false
   };
 
   handleChange = event => {
@@ -61,42 +63,52 @@ export class MessageForm extends Component {
       });
     }
   };
+  openModal = () => (this.setState({ modal: true }));
+  closeModal = () => (this.setState({ modal: false }));
   render() {
-    const { errors, message, loading } = this.state;
+    const { errors, message, loading , modal} = this.state;
     return (
-      <Segment className="message__form">
-        <Input
-          fluid
-          name="message"
-          style={{ marginBottom: "0.7rem" }}
-          label={<Button icon={"add"} />}
-          labelPosition="left"
-          placeholder="Writ your message"
-                onChange={this.handleChange}
-                value ={message}
-          className={
-            errors.some(error => error.message.includes("message"))
-              ? "error"
-              : ""
-          }
-        />
-        <Button.Group icon widths="2">
-          <Button
-            color="orange"
-            content="Add Reply"
+<React.Fragment>
+        <Segment className="message__form">
+          <Input
+            fluid
+            name="message"
+            style={{ marginBottom: "0.7rem" }}
+            label={<Button icon={"add"} />}
             labelPosition="left"
-            icon="edit"
-                    onClick={this.sendMessage}
-                    disabled ={loading}
+            placeholder="Writ your message"
+                  onChange={this.handleChange}
+                  value ={message}
+            className={
+              errors.some(error => error.message.includes("message"))
+                ? "error"
+                : ""
+            }
           />
-          <Button
-            color="teal"
-            content="Upload Media"
-            labelPosition="right"
-            icon="cloud upload"
-          />
-        </Button.Group>
-      </Segment>
+          <Button.Group icon widths="2">
+            <Button
+              color="orange"
+              content="Add Reply"
+              labelPosition="left"
+              icon="edit"
+                      onClick={this.sendMessage}
+                      disabled ={loading}
+            />
+            <Button
+              color="teal"
+              content="Upload Media"
+              labelPosition="right"
+              icon="cloud upload"
+              onClick ={this.openModal}
+            />
+            <FileModal
+              modal={modal}
+              closeModal= {this.closeModal}
+            />
+          </Button.Group>
+        </Segment>
+
+</React.Fragment>
     );
   }
 }
