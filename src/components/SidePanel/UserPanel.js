@@ -23,7 +23,8 @@ class UserPanel extends Component {
     {
       key: "singout",
 
-      text: <span onClick={this.handleSignOut}>Sign Out</span>
+      text: <span>Sign Out</span>,
+      onClick: this.handleSignOut
     }
   ];
 
@@ -32,7 +33,7 @@ class UserPanel extends Component {
       .auth()
       .signOut()
       .then(() => {
-        console.log("signed out");
+       
       });
   };
   render() {

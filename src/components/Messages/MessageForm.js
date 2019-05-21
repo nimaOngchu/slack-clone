@@ -16,16 +16,19 @@ export class MessageForm extends Component {
     channel: this.props.currentChannel,
     user: this.props.currentUser,
     errors: [],
-    modal: false
+    modal: false,
+    isPrivateChannel: this.props.isPrivateChannel,
+    privateMessageRef: firebase.database().ref('privateMessages')
   };
-
+  getMessagesRef = () => {
+    return this.props.messagesRef();
+  };
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
   createMessage = (fileUrl = null) => {
     const message = {
-
       timestamp: firebase.database.ServerValue.TIMESTAMP,
       user: {
         id: this.state.user.uid,
@@ -34,7 +37,7 @@ export class MessageForm extends Component {
       }
     };
     if (fileUrl !== null) {
-      message['image'] = fileUrl
+      message['image'] = fileUrl;
     } else {
       message['content'] = this.state.message;
     }
@@ -42,13 +45,13 @@ export class MessageForm extends Component {
   };
 
   sendMessage = () => {
-    const { messagesRef } = this.props;
+    // const { messagesRef } = this.props;
     const { message, channel } = this.state;
 
     if (message) {
       this.setState({ loading: true });
 
-      messagesRef
+      this.getMessagesRef()
         .child(channel.id)
         .push()
         .set(this.createMessage())
@@ -72,12 +75,19 @@ export class MessageForm extends Component {
       });
     }
   };
+  getFilePath = () => {
+    return this.state.isPrivateChannel
+      ? `chat/private${this.state.channel.id}`
+      : 'chat/public';
+  };
   openModal = () => this.setState({ modal: true });
   closeModal = () => this.setState({ modal: false });
   uploadFile = (file, metadata) => {
     const pathToUpload = this.state.channel.id;
-    const ref = this.props.messagesRef;
-    const filePath = `chat/public/${uuidv4()}.jpg`;
+    const ref = this.getMessagesRef();
+
+    //set get file path
+    const filePath = `${this.getFilePath()}${uuidv4()}.jpg`;
     this.setState(
       {
         uploadState: 'uploading',
@@ -101,12 +111,10 @@ export class MessageForm extends Component {
             });
           },
           () => {
-
             this.state.uploadTask.snapshot.ref
               .getDownloadURL()
               .then(downloadUrl => {
                 this.sendFileMessage(downloadUrl, ref, pathToUpload);
-
               })
               .catch(err => {
                 this.setState({
@@ -121,18 +129,27 @@ export class MessageForm extends Component {
     );
   };
   sendFileMessage = (fileUrl, ref, pathToUpload) => {
-    ref.child(pathToUpload)
+    ref
+      .child(pathToUpload)
       .push()
       .set(this.createMessage(fileUrl))
       .then(() => {
-      this.setState({uploadState:'done'})
-      }).catch((err) => {
+        this.setState({ uploadState: 'done' });
+      })
+      .catch(err => {
         console.error(err);
-        this.setState({errors:this.state.errors.concat(err)})
-    })
-  }
+        this.setState({ errors: this.state.errors.concat(err) });
+      });
+  };
   render() {
-    const { errors, message, loading, modal , uploadState, percentuploaded} = this.state;
+    const {
+      errors,
+      message,
+      loading,
+      modal,
+      uploadState,
+      percentuploaded
+    } = this.state;
     return (
       <React.Fragment>
         <Segment className="message__form">
@@ -166,20 +183,19 @@ export class MessageForm extends Component {
               labelPosition="right"
               icon="cloud upload"
               onClick={this.openModal}
-              disabled ={uploadState === 'uploading'}
+              disabled={uploadState === 'uploading'}
             />
             <FileModal
               modal={modal}
               closeModal={this.closeModal}
               uploadFile={this.uploadFile}
             />
-
           </Button.Group>
           <ProgressBar
-              percentuploaded={percentuploaded}
-              uploadState={uploadState}/>
+            percentuploaded={percentuploaded}
+            uploadState={uploadState}
+          />
         </Segment>
-
       </React.Fragment>
     );
   }
