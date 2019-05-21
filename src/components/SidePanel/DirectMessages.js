@@ -11,19 +11,17 @@ class DirectMessages extends Component {
         usersRef: firebase.database().ref('users'),
         connectedRef: firebase.database().ref('.info/connected'),
         presenceRef: firebase.database().ref('presence'),
-        setCurrentChannel: this.props.setCurrentChannel
+        setCurrentChannel: this.props.setCurrentChannel,
+
     }
 
     componentDidMount() {
-
         if (this.state.user) {
             this.addListeners(this.state.user.uid);
-
         }
     }
 
     addListeners = (currentUserUid) => {
-
         let loadedUSers = [];
         this.state.usersRef.on('child_added', snap => {
             if (currentUserUid !== snap.key) {
@@ -47,14 +45,7 @@ class DirectMessages extends Component {
                 this.addStatusToUser(snap.key)
             }
         });
-        this.state.presenceRef.on('child_removed', snap => {
 
-            if (currentUserUid !== snap.key) {
-                // add stataus to the user
-
-                this.addStatusToUser(snap.key, false)
-            }
-        })
     }
 
     addStatusToUser = (userId, connected =true) => {
@@ -71,12 +62,15 @@ class DirectMessages extends Component {
     isUserOnline = user => user.status === 'online';
     changeChannel = user => {
         const channelId = this.getChannerId(user.uid);
+        this.props.setActiveChannel(user.uid);
         const channelData = {
             id: channelId,
             name: user.name
         }
+
         this.state.setCurrentChannel(channelData);
         this.props.setPrivateChannel(true);
+
     }
     getChannerId = userId => {
         const currentUserId = this.state.user.uid;
@@ -95,6 +89,7 @@ class DirectMessages extends Component {
             </Menu.Item>
             {users.map(user => (
                 <Menu.Item
+                className ={user.uid === this.props.activeChannel ? 'active' : ''}
                     key={user.uid}
                     onClick={() => this.changeChannel(user)}
                     style ={{opacity: 0.7, fontStyle: 'italic'}}
