@@ -118,9 +118,26 @@ class Messages extends Component {
         });
         this.countUniqueUsers(loadedMessages);
         this.scrollToBottom();
+        this.countUserPosts(loadedMessages);
       });
 
   };
+
+  countUserPosts = messages => {
+    let userPosts = messages.reduce((acc, message) => {
+      if (message.user.name in acc) {
+        acc[message.user.name].count += 1;
+
+      } else {
+        acc[message.user.name] = {
+          avatar: message.user.avatar,
+          count:1
+        }
+      }
+      return acc;
+    }, {})
+    this.props.setUserPosts(userPosts);
+  }
 
   countUniqueUsers = (message) => {
     const uniqueUsers = message.reduce((acc, message) => {
