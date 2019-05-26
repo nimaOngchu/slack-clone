@@ -41,8 +41,10 @@ class Channels extends React.Component {
     this.state.channelsRef.on('child_added', snap => {
       loadedChannels.push(snap.val());
       this.setState({ channels: loadedChannels }, () => this.setFirstChannel());
+
       this.addNotificationListner(snap.key);
     });
+   
   };
 
   addNotificationListner = channelId => {

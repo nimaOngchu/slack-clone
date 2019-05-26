@@ -13,10 +13,10 @@ class MetaPanel extends Component {
     const newIndex = activeIndex === index ? -1 : index;
     this.setState({ activeIndex: newIndex });
   }
-formtaCount = num => (num > 1 || num === 0) ? `${num } posts` : `${num } post`
+formatCount = num => (num > 1 || num === 0) ? `${num } posts` : `${num } post`
   displayTopPosters = posts =>
 
-    // Object.entries converts object inot multiple arrays with keys and values
+    // Object.entries converts object into multiple arrays with keys and values
     //eg. var a = { b: 1, c: 1 } => Object.entries(a) => [[b, 1], [c, 1]]
     Object.entries(posts)
       .sort((a, b) => b[1].count - a[1].count)
@@ -25,7 +25,7 @@ formtaCount = num => (num > 1 || num === 0) ? `${num } posts` : `${num } post`
           <Image avatar src={val.avatar} />
           <List.Content>
             <List.Header as='a'>{key}</List.Header>
-            <List.Description>{val.count} Posts</List.Description>
+            <List.Description> {this.formatCount(val.count)}</List.Description>
           </List.Content>
         </List.Item>
 

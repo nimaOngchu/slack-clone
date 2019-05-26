@@ -24,13 +24,13 @@ class Messages extends Component {
   componentDidMount() {
     const { channel, user } = this.state;
     if (channel && user) {
-      this.addListners(channel.id);
-      this.addUserStarListner(channel.id)
+      this.addListeners(channel.id);
+      this.addUserStarListener(channel.id)
     }
   }
 
   componentWillUnmount() {
-    this.removeListner();
+    this.removeListener();
   }
   getMessageRef = () =>
   {
@@ -44,7 +44,7 @@ class Messages extends Component {
     }), () => this.starChannel())
   }
 
-  addUserStarListner = (channel) => {
+  addUserStarListener = (channel) => {
     const ref = this.state.userRef.child('starred');
     ref.once('value').then(data => {
       if (data.val() != null) {
@@ -103,10 +103,10 @@ class Messages extends Component {
     setTimeout(() => this.setState({searchLoading: false}), 1000)
 
   }
-  removeListner = () => {
+  removeListener = () => {
     this.getMessageRef().off();
   };
-  addListners = channel => {
+  addListeners = channel => {
     let loadedMessages = [];
 
       this.getMessageRef().child(channel).on('child_added', snap => {
@@ -146,8 +146,8 @@ class Messages extends Component {
       }
       return acc;
     }, [])
-    const plulral = uniqueUsers.length > 1 || uniqueUsers.lenght === 0;
-    const numUniqueUsers = `${uniqueUsers.length +' ' }user${plulral ? 's' : ''}`;
+    const plural = uniqueUsers.length > 1 || uniqueUsers.length === 0;
+    const numUniqueUsers = `${uniqueUsers.length +' ' }user${plural ? 's' : ''}`;
     this.setState({numUniqueUsers})
   }
   displayMessages = messages =>

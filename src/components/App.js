@@ -11,8 +11,8 @@ import { setUserPosts } from '../actions'
 const App = ({currentUser, currentChannel, isPrivateChannel, setUserPosts, userPosts}) => {
   return (
     <Grid columns= "equal" className ="app" style ={{background: '#eee'}}>
-      <ColorPanel />
-      <SidePanel key={currentUser && currentUser.id} currentUser={currentUser}/>
+      <ColorPanel currentUser={currentUser} key={ currentUser &&currentUser.name}/>
+      <SidePanel key={currentUser && currentUser.uid} currentUser={currentUser}/>
       <Grid.Column style ={{marginLeft: 320}}>
         <Messages
           key={currentChannel && currentChannel.id}
@@ -24,7 +24,7 @@ const App = ({currentUser, currentChannel, isPrivateChannel, setUserPosts, userP
       </Grid.Column>
       <Grid.Column width ={4}>
         <MetaPanel
-          key={currentChannel && currentChannel.id}
+          key={currentChannel && currentChannel.name}
           isPrivateChannel={isPrivateChannel}
           currentChannel={currentChannel}
           userPosts = { userPosts}
