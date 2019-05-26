@@ -33,14 +33,14 @@ class UserPanel extends Component {
       .auth()
       .signOut()
       .then(() => {
-       
+
       });
   };
   render() {
-    const user = this.props.currentUser;
+    const {currentUser, primaryColor} = this.props;
 
     return (
-      <Grid style={{ background: "#4c3c4c" }}>
+      <Grid style={{ background: primaryColor}}>
         <Grid.Column>
           <Grid.Row style={{ padding: "1.2rem", margin: 0 }}>
             {/* App Header */}
@@ -54,8 +54,8 @@ class UserPanel extends Component {
             <Dropdown
               trigger={
                 <span>
-                  <Image src={user.photoURL} spaced="right" avatar />
-                  {user.displayName}
+                  <Image src={currentUser.photoURL} spaced="right" avatar />
+                  {currentUser.displayName}
                 </span>
               }
               options={this.dropdownOptions()}
